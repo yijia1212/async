@@ -4,14 +4,14 @@
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-#ifndef ASYNC_DIALECT_TD
-#define ASYNC_DIALECT_TD
+#ifndef ASYNC_DIALECT
+#define ASYNC_DIALECT
 
 include "mlir/IR/OpBase.td"
 
 def AsyncDialect : Dialect {
   let name = "async";
-  let cppNamespace = "::mlir::iree_compiler::IREE::Async";
+  let cppNamespace = "::openxla::compiler::Async";
 
   let summary = "Types and operations for async dialect";
   let description = [{
@@ -21,4 +21,4 @@ def AsyncDialect : Dialect {
   let useDefaultTypePrinterParser = 1;
 }
 
-#endif // ASYNC_DIALECT_TD
+#endif // ASYNC_DIALECT

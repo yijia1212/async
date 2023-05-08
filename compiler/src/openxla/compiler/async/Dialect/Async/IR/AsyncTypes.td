@@ -15,7 +15,7 @@
 #define ASYNC_TYPES
 
 include "mlir/IR/AttrTypeBase.td"
-include "async/IR/AsyncDialect.td"
+include "AsyncDialect.td"
 
 //===----------------------------------------------------------------------===//
 // Async Types

@@ -11,8 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef IREE_SAMPLES_ASYNC_ASYNC_PLUGIN_IR_ASYNC_H_
-#define IREE_SAMPLES_ASYNC_ASYNC_PLUGIN_IR_ASYNC_H_
+#ifndef ASYNC_ASYNC_H_
+#define ASYNC_ASYNC_H_
 
 #include "mlir/IR/Types.h"
 #include "mlir/IR/Builders.h"
@@ -31,14 +31,14 @@
 // Async Dialect
 //===----------------------------------------------------------------------===//
 
-#include "async/IR/AsyncOpsDialect.h.inc"
+#include "AsyncOpsDialect.h.inc"
 
 //===----------------------------------------------------------------------===//
 // Async Dialect Operations
 //===----------------------------------------------------------------------===//
 
 #define GET_OP_CLASSES
-#include "async/IR/AsyncOps.h.inc"
+#include "AsyncOps.h.inc"
 
 
 //===----------------------------------------------------------------------===//
@@ -46,6 +46,6 @@
 //===----------------------------------------------------------------------===//
 
 #define GET_TYPEDEF_CLASSES
-#include "async/IR/AsyncOpsTypes.h.inc"
+#include "AsyncOpsTypes.h.inc"
 
-#endif // IREE_SAMPLES_ASYNC_ASYNC_PLUGIN_IR_ASYNC_H_
+#endif // ASYNC_ASYNC_H_

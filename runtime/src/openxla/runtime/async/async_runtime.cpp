@@ -91,8 +91,6 @@ IREE_API_EXPORT iree_status_t
 iree_async_token_and_then(iree_async_token_t* token, iree_loop_callback_t callback, iree_loop_t loop){
   AsyncToken* val = reinterpret_cast<AsyncToken*>(token);
   val->GetAsyncValue()->AndThen([callback, loop](){
-    fprintf(stdout, "AndThen hah\n");
-    fflush(stdout);
     iree_status_t status = callback.fn(callback.user_data, loop, iree_ok_status());
     (void)status;
     //notify loop is status is not OK

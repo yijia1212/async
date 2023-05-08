@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "async/IR/Async.h"
+#include "Async.h"
 
 #include "mlir/IR/DialectImplementation.h"
 #include "mlir/IR/FunctionImplementation.h"
@@ -15,17 +15,17 @@
 #include "llvm/ADT/TypeSwitch.h"
 
 using namespace mlir;
-using namespace mlir::iree_compiler::IREE::Async;
+using namespace openxla::compiler::Async;
 
-#include "async/IR/AsyncOpsDialect.cpp.inc"
+#include "AsyncOpsDialect.cpp.inc"
 
 void AsyncDialect::initialize() {
   addOperations<
 #define GET_OP_LIST
-#include "async/IR/AsyncOps.cpp.inc"
+#include "AsyncOps.cpp.inc"
       >();
   addTypes<
 #define GET_TYPEDEF_LIST
-#include "async/IR/AsyncOpsTypes.cpp.inc"
+#include "AsyncOpsTypes.cpp.inc"
       >(); 
 }

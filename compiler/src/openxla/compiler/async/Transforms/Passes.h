@@ -20,7 +20,7 @@ class ModuleOp;
 class ConversionTarget;
 
 #define GEN_PASS_DECL
-#include "samples/async/async_plugin/src/Transforms/Passes.h.inc"
+#include "Passes.h.inc"
 
 std::unique_ptr<OperationPass<ModuleOp>> createAsyncToAsyncRuntimePass();
 
@@ -30,7 +30,7 @@ std::unique_ptr<OperationPass<ModuleOp>> createAsyncToAsyncRuntimePass();
 
 /// Generate the code for registering passes.
 #define GEN_PASS_REGISTRATION
-#include "samples/async/async_plugin/src/Transforms/Passes.h.inc"
+#include "Passes.h.inc"
 
 } // namespace mlir
 
