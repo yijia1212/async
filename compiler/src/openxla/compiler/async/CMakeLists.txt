@@ -25,7 +25,7 @@ iree_cc_library(
     MLIRIR
     MLIRPass
     iree::compiler::PluginAPI
-    openxla::compiler::async::Dialect::ASYNC::IR
+    openxla::compiler::async::Dialect::Async::IR
     openxla::compiler::async::Transforms
   PUBLIC
 )

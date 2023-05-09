@@ -10,8 +10,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef IREE_SAMPLES_ASYNC_ASYNC_PLUGIN_TRANSFORMS_PASSES_H_
-#define IREE_SAMPLES_ASYNC_ASYNC_PLUGIN_TRANSFORMS_PASSES_H_
+#ifndef OPENXLA_ASYNC_TRANSFORMS_PASSES_H_
+#define OPENXLA_ASYNC_TRANSFORMS_PASSES_H_
 
 #include "mlir/Pass/Pass.h"
 
@@ -20,7 +20,7 @@ class ModuleOp;
 class ConversionTarget;
 
 #define GEN_PASS_DECL
-#include "Passes.h.inc"
+#include "openxla/compiler/async/Transforms/Passes.h.inc"
 
 std::unique_ptr<OperationPass<ModuleOp>> createAsyncToAsyncRuntimePass();
 
@@ -30,8 +30,8 @@ std::unique_ptr<OperationPass<ModuleOp>> createAsyncToAsyncRuntimePass();
 
 /// Generate the code for registering passes.
 #define GEN_PASS_REGISTRATION
-#include "Passes.h.inc"
+#include "openxla/compiler/async/Transforms/Passes.h.inc"
 
 } // namespace mlir
 
-#endif // IREE_SAMPLES_ASYNC_ASYNC_PLUGIN_TRANSFORMS_PASSES_H_
+#endif // OPENXLA_ASYNC_TRANSFORMS_PASSES_H_

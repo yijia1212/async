@@ -11,7 +11,7 @@ include "mlir/IR/OpBase.td"
 
 def AsyncDialect : Dialect {
   let name = "async";
-  let cppNamespace = "::openxla::compiler::Async";
+  let cppNamespace = "::openxla::compiler::async";
 
   let summary = "Types and operations for async dialect";
   let description = [{

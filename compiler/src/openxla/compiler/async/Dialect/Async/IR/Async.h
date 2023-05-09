@@ -28,24 +28,26 @@
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 
 //===----------------------------------------------------------------------===//
+// Async Dialect Types
+//===----------------------------------------------------------------------===//
+
+#define GET_TYPEDEF_CLASSES
+#include "openxla/compiler/async/Dialect/Async/IR/AsyncTypes.h.inc"
+
+//===----------------------------------------------------------------------===//
 // Async Dialect
 //===----------------------------------------------------------------------===//
 
-#include "AsyncOpsDialect.h.inc"
+#include "openxla/compiler/async/Dialect/Async/IR/AsyncDialect.h.inc"
 
 //===----------------------------------------------------------------------===//
 // Async Dialect Operations
 //===----------------------------------------------------------------------===//
 
 #define GET_OP_CLASSES
-#include "AsyncOps.h.inc"
+#include "openxla/compiler/async/Dialect/Async/IR/AsyncOps.h.inc"
 
 
-//===----------------------------------------------------------------------===//
-// Async Dialect Types
-//===----------------------------------------------------------------------===//
 
-#define GET_TYPEDEF_CLASSES
-#include "AsyncOpsTypes.h.inc"
 
 #endif // ASYNC_ASYNC_H_

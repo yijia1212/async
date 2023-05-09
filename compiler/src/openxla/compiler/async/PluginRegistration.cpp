@@ -10,8 +10,8 @@
 #include "mlir/IR/MLIRContext.h"
 #include "mlir/Pass/Pass.h"
 
-#include "async/IR/Async.h"
-#include "async/Transforms/Passes.h"
+#include "openxla/compiler/async/Dialect/Async/IR/Async.h"
+#include "openxla/compiler/async/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::iree_compiler;
@@ -32,10 +32,10 @@ struct MyOptions {
 };
 
 struct MySession : public PluginSession<MySession, MyOptions> {
-  static void registerPasses() { ::detail::registerPasses(); }
+  static void registerPasses() { /*::detail::registerPasses();*/ }
 
   void onRegisterDialects(DialectRegistry &registry) override {
-    registry.insert<IREE::Async::AsyncDialect>();
+    registry.insert<openxla::compiler::async::AsyncDialect>();
   }
 
   LogicalResult onActivate() override { return success(); }
@@ -49,8 +49,8 @@ struct MySession : public PluginSession<MySession, MyOptions> {
 
 IREE_DEFINE_COMPILER_OPTION_FLAGS(MyOptions);
 
-extern "C" bool iree_register_compiler_plugin_simple_io_sample(
+extern "C" bool iree_register_compiler_plugin_openxla_async(
     mlir::iree_compiler::PluginRegistrar *registrar) {
-  registrar->registerPlugin<MySession>("async");
+  registrar->registerPlugin<MySession>("openxla_async");
   return true;
 }

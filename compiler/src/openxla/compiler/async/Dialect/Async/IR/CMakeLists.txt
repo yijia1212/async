@@ -23,7 +23,6 @@ iree_cc_library(
   DEPS
     ::AsyncOpsGen
     ::AsyncTypesGen
-    ::defs
     LLVMSupport
     MLIRFuncDialect
     MLIRIR
@@ -58,7 +57,7 @@ iree_tablegen_doc(
   NAME
     AsyncDialectDocGen
   TD_FILE
-    "src/async/IR/AsyncOps.td"
+    "AsyncOps.td"
   OUTS
     --gen-dialect-doc -dialect=async src/async/IR/AsyncDialect.md
 )

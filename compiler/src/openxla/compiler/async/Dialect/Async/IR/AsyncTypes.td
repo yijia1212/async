@@ -15,7 +15,7 @@
 #define ASYNC_TYPES
 
 include "mlir/IR/AttrTypeBase.td"
-include "AsyncDialect.td"
+include "openxla/compiler/async/Dialect/Async/IR/AsyncDialect.td"
 
 //===----------------------------------------------------------------------===//
 // Async Types
@@ -55,5 +55,8 @@ def Async_ValueType : Async_Type<"Value", "value"> {
 
 def Async_AnyValueOrTokenType : AnyTypeOf<[Async_ValueType,
                                            Async_TokenType]>;
+
+def Async_AnyAsyncType : AnyTypeOf<[Async_ValueType,
+                                    Async_TokenType]>;
 
 #endif // ASYNC_TYPES
