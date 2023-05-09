@@ -26,7 +26,7 @@ option(IREE_BUILD_COMPILER "Disable compiler for runtime-library build" ON)
 option(IREE_BUILD_SAMPLES "Disable samples for runtime-library build" OFF)
 option(IREE_COMPILER_BUILD_SHARED_LIBS "Enables shared libraries in the compiler by default" ON)
 
-set(IREE_COMPILER_PLUGIN_PATHS "${CMAKE_CURRENT_SOURCE_DIR}" CACHE STRING "async plugins")
+#set(IREE_COMPILER_PLUGIN_PATHS "${CMAKE_CURRENT_SOURCE_DIR}" CACHE STRING "async plugins")
 add_subdirectory("${IREE_ROOT_DIR}" "iree_core")
 
 # Handle various global definitions that need to be set at the global
