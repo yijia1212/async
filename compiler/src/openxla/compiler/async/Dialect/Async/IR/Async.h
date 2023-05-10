@@ -1,15 +1,8 @@
-//===- Async.h - MLIR Async dialect -----------------------------*- C++ -*-===//
+// Copyright 2023 The IREE Authors
 //
-// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// Licensed under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-//
-//===----------------------------------------------------------------------===//
-//
-// This file defines the async dialect that is used for modeling asynchronous
-// execution.
-//
-//===----------------------------------------------------------------------===//
 
 #ifndef ASYNC_ASYNC_H_
 #define ASYNC_ASYNC_H_
@@ -46,8 +39,5 @@
 
 #define GET_OP_CLASSES
 #include "openxla/compiler/async/Dialect/Async/IR/AsyncOps.h.inc"
-
-
-
 
 #endif // ASYNC_ASYNC_H_

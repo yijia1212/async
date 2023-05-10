@@ -1,10 +1,8 @@
-//===- Async.cpp - MLIR Async Operations ----------------------------------===//
+// Copyright 2023 The IREE Authors
 //
-// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// Licensed under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-//
-//===----------------------------------------------------------------------===//
 
 #include "openxla/compiler/async/Dialect/Async/IR/Async.h"
 
@@ -19,7 +17,8 @@ using namespace openxla::compiler::async;
 
 #include "openxla/compiler/async/Dialect/Async/IR/AsyncDialect.cpp.inc"
 
-void AsyncDialect::initialize() {
+void AsyncDialect::initialize()
+{
   addOperations<
 #define GET_OP_LIST
 #include "openxla/compiler/async/Dialect/Async/IR/AsyncOps.cpp.inc"
@@ -27,7 +26,7 @@ void AsyncDialect::initialize() {
   addTypes<
 #define GET_TYPEDEF_LIST
 #include "openxla/compiler/async/Dialect/Async/IR/AsyncTypes.cpp.inc"
-      >(); 
+      >();
 }
 
 //===----------------------------------------------------------------------===//
@@ -35,7 +34,8 @@ void AsyncDialect::initialize() {
 //===----------------------------------------------------------------------===//
 
 void AwaitOp::build(OpBuilder &builder, OperationState &result, Value operand,
-                    ArrayRef<NamedAttribute> attrs) {
+                    ArrayRef<NamedAttribute> attrs)
+{
   result.addOperands({operand});
   result.attributes.append(attrs.begin(), attrs.end());
 
@@ -45,7 +45,8 @@ void AwaitOp::build(OpBuilder &builder, OperationState &result, Value operand,
 }
 
 static ParseResult parseAwaitResultType(OpAsmParser &parser, Type &operandType,
-                                        Type &resultType) {
+                                        Type &resultType)
+{
   if (parser.parseType(operandType))
     return failure();
 
@@ -57,11 +58,13 @@ static ParseResult parseAwaitResultType(OpAsmParser &parser, Type &operandType,
 }
 
 static void printAwaitResultType(OpAsmPrinter &p, Operation *op,
-                                 Type operandType, Type resultType) {
+                                 Type operandType, Type resultType)
+{
   p << operandType;
 }
 
-LogicalResult AwaitOp::verify() {
+LogicalResult AwaitOp::verify()
+{
   Type argType = getOperand().getType();
 
   // Awaiting on a token does not have any results.
@@ -69,7 +72,8 @@ LogicalResult AwaitOp::verify() {
     return emitOpError("awaiting on a token must have empty result");
 
   // Awaiting on a value unwraps the async value type.
-  if (auto value = argType.dyn_cast<ValueType>()) {
+  if (auto value = argType.dyn_cast<ValueType>())
+  {
     if (*getResultType() != value.getValueType())
       return emitOpError() << "result type " << *getResultType()
                            << " does not match async value type "
@@ -93,15 +97,18 @@ LogicalResult AwaitOp::verify() {
 #define GET_TYPEDEF_CLASSES
 #include "openxla/compiler/async/Dialect/Async/IR/AsyncTypes.cpp.inc"
 
-void ValueType::print(AsmPrinter &printer) const {
+void ValueType::print(AsmPrinter &printer) const
+{
   printer << "<";
   printer.printType(getValueType());
   printer << '>';
 }
 
-Type ValueType::parse(mlir::AsmParser &parser) {
+Type ValueType::parse(mlir::AsmParser &parser)
+{
   Type ty;
-  if (parser.parseLess() || parser.parseType(ty) || parser.parseGreater()) {
+  if (parser.parseLess() || parser.parseType(ty) || parser.parseGreater())
+  {
     parser.emitError(parser.getNameLoc(), "failed to parse async value type");
     return Type();
   }

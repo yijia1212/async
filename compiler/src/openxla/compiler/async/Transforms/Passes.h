@@ -13,25 +13,12 @@
 #ifndef OPENXLA_ASYNC_TRANSFORMS_PASSES_H_
 #define OPENXLA_ASYNC_TRANSFORMS_PASSES_H_
 
+#include "mlir/IR/BuiltinOps.h"
 #include "mlir/Pass/Pass.h"
+#include "mlir/Pass/PassManager.h"
 
-namespace mlir {
-class ModuleOp;
-class ConversionTarget;
-
-#define GEN_PASS_DECL
-#include "openxla/compiler/async/Transforms/Passes.h.inc"
-
-std::unique_ptr<OperationPass<ModuleOp>> createAsyncToAsyncRuntimePass();
-
-//===----------------------------------------------------------------------===//
-// Registration
-//===----------------------------------------------------------------------===//
-
-/// Generate the code for registering passes.
-#define GEN_PASS_REGISTRATION
-#include "openxla/compiler/async/Transforms/Passes.h.inc"
-
-} // namespace mlir
+namespace openxla::compiler::async {
+std::unique_ptr<mlir::OperationPass<mlir::ModuleOp>> createAsyncToAsyncRuntimePass();
+} // namespace openxla::compiler::async
 
 #endif // OPENXLA_ASYNC_TRANSFORMS_PASSES_H_

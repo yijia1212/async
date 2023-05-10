@@ -28,7 +28,7 @@ vm.import private @async.token.fail(
 // Yields the caller until async token is available.
 vm.import private @async.token.await(
   %token : !vm.ref<!async.token> ...
-) -> i32
+)
 attributes {vm.yield}
 
-}
+} // module

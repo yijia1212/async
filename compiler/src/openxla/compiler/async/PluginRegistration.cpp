@@ -16,23 +16,23 @@
 using namespace mlir;
 using namespace mlir::iree_compiler;
 
-/* namespace detail {
+namespace detail {
 namespace {
 
 #define GEN_PASS_REGISTRATION
-#include "Transforms/Passes.h.inc"
+#include "openxla/compiler/async/Transforms/Passes.h.inc"
 
 }  // namespace
-}  // namespace detail */
+}  // namespace detail 
 
 namespace {
 
-struct MyOptions {
+struct AsyncOptions {
   void bindOptions(OptionsBinder &binder) {}
 };
 
-struct MySession : public PluginSession<MySession, MyOptions> {
-  static void registerPasses() { /*::detail::registerPasses();*/ }
+struct AsyncSession : public PluginSession<AsyncSession, AsyncOptions> {
+  static void registerPasses() { ::detail::registerPasses(); }
 
   void onRegisterDialects(DialectRegistry &registry) override {
     registry.insert<openxla::compiler::async::AsyncDialect>();
@@ -41,16 +41,16 @@ struct MySession : public PluginSession<MySession, MyOptions> {
   LogicalResult onActivate() override { return success(); }
 
   void extendPreprocessingPassPipeline(OpPassManager &pm) override {
-    //pm.addPass(IREE::SimpleIO::createLegalizeSimpleIOPass());
+    pm.addPass(openxla::compiler::async::createAsyncToAsyncRuntimePass());
   }
 };
 
 }  // namespace
 
-IREE_DEFINE_COMPILER_OPTION_FLAGS(MyOptions);
+IREE_DEFINE_COMPILER_OPTION_FLAGS(AsyncOptions);
 
 extern "C" bool iree_register_compiler_plugin_openxla_async(
     mlir::iree_compiler::PluginRegistrar *registrar) {
-  registrar->registerPlugin<MySession>("openxla_async");
+  registrar->registerPlugin<AsyncSession>("openxla_async");
   return true;
 }
