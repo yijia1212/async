@@ -1,12 +1,16 @@
 // RUN: iree-compile %s --iree-execution-model=host-only | openxla-runner - example.main | FileCheck %s
 
-module @example {
-  func.func private @async.token.await(!async.token)
-
-  // CHECK-LABEL: INVOKE BEGIN example.main
-  func.func @main(%arg0: !async.token) {
-    call @async.token.await(%arg0) : (!async.token) -> ()
-    return
+module attributes {vm.toplevel} {
+  vm.module public @example {
+    vm.import private @async.token.create() -> !vm.ref<!async.token>
+    vm.import private @async.token.query(%token : !vm.ref<!async.token>) -> i32
+    vm.import private @async.token.signal(%token : !vm.ref<!async.token>)
+    vm.import private @async.token.fail(%token : !vm.ref<!async.token>, %status : i32)
+    vm.import private @async.token.await(%token : !vm.ref<!async.token>)
+    vm.func private @main(%arg0: !vm.ref<!async.token>) {
+      vm.call @async.token.await(%arg0) : (!vm.ref<!async.token>) -> ()
+      vm.return
+    }
+    vm.export @main
   }
-  // CHECK-NEXT: INVOKE END
 }

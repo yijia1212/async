@@ -50,7 +50,4 @@ def Async_ValueType : Async_Type<"Value", "value"> {
 def Async_AnyValueOrTokenType : AnyTypeOf<[Async_ValueType,
                                            Async_TokenType]>;
 
-def Async_AnyAsyncType : AnyTypeOf<[Async_ValueType,
-                                    Async_TokenType]>;
-
 #endif // ASYNC_TYPES

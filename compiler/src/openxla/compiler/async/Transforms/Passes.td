@@ -15,7 +15,8 @@ def AsyncToAsyncRuntime : Pass<"async-to-async-runtime", "mlir::ModuleOp"> {
   let summary = "Lower all high level async operations to"
                 "the explicit async.runtime operations";
   let constructor = "openxla::compiler::async::createAsyncToAsyncRuntimePass()";
-  let dependentDialects = ["::openxla::compiler::async::AsyncDialect", "mlir::func::FuncDialect"];
+  let dependentDialects = ["::openxla::compiler::async::AsyncDialect", "mlir::func::FuncDialect", 
+                           "mlir::iree_compiler::IREE::VM::VMDialect"];
 }
 
 #endif // OPENXLA_ASYNC_TRANSFORMS_PASSES_TD_

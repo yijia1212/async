@@ -1,15 +1,8 @@
-//===- AsyncRuntime.h - Async runtime reference implementation ------------===//
+// Copyright 2022 The IREE Authors
 //
-// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// Licensed under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-//
-//===----------------------------------------------------------------------===//
-//
-// This file declares basic Async runtime API for supporting Async dialect
-// to LLVM dialect lowering.
-//
-//===----------------------------------------------------------------------===//
 
 #ifndef OPENXLA_RUNTIME_ASYNC_ASYNCRUNTIME_H_
 #define OPENXLA_RUNTIME_ASYNC_ASYNCRUNTIME_H_
@@ -53,7 +46,7 @@ extern "C"
                                    const void *params, void **inout_ptr);
 
   //===----------------------------------------------------------------------===//
-  // iree_hal_fence_t implementation details
+  // iree_async_token_t implementation details
   //===----------------------------------------------------------------------===//
 
   IREE_API_EXPORT void iree_async_token_destroy(iree_async_token_t *token);

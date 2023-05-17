@@ -38,8 +38,6 @@ struct AsyncSession : public PluginSession<AsyncSession, AsyncOptions> {
     registry.insert<openxla::compiler::async::AsyncDialect>();
   }
 
-  LogicalResult onActivate() override { return success(); }
-
   void extendPreprocessingPassPipeline(OpPassManager &pm) override {
     pm.addPass(openxla::compiler::async::createAsyncToAsyncRuntimePass());
   }

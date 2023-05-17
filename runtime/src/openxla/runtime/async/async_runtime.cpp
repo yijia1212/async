@@ -5,6 +5,8 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 #include <stdio.h>
+#include <optional>
+#include <cstddef>
 
 #include "iree/vm/ref_cc.h"
 #include "openxla/runtime/async/async_runtime.h"
@@ -12,31 +14,91 @@
 #include "concurrency/async_value_ref.h"
 #include "concurrency/chain.h"
 
-namespace iree
+namespace openxla::runtime::async {
+
+using tsl::AsyncValueOwningRef;
+using tsl::Chain;
+using tsl::MakeAvailableAsyncValueRef;
+using tsl::MakeConstructedAsyncValueRef;
+using tsl::internal::AsyncValueStorage;
+
+struct AsyncToken : public iree::vm::RefObject<AsyncToken>
 {
-  namespace runtime
-  {
-    using tsl::AsyncValueOwningRef;
-    using tsl::Chain;
-    using tsl::MakeAvailableAsyncValueRef;
-    using tsl::MakeConstructedAsyncValueRef;
-    using tsl::internal::AsyncValueStorage;
+  explicit AsyncToken()
+      : chain(MakeConstructedAsyncValueRef<Chain>(storage)) {}
 
-    struct AsyncToken : public iree::vm::RefObject<AsyncToken>
-    {
-      explicit AsyncToken()
-          : chain(MakeConstructedAsyncValueRef<Chain>(storage)) {}
+  tsl::AsyncValue *GetAsyncValue() const { return chain.AsPtr().value(); }
 
-      tsl::AsyncValue *GetAsyncValue() const { return chain.AsPtr().value(); }
+  AsyncValueStorage<Chain> storage;
+  AsyncValueOwningRef<Chain> chain;
+};
 
-      AsyncValueStorage<Chain> storage;
-      AsyncValueOwningRef<Chain> chain;
+struct AsyncValue : public iree::vm::RefObject<AsyncValue> {
+  explicit AsyncValue()
+      : chain(MakeConstructedAsyncValueRef<Chain>(storage)) {}
+
+  explicit AsyncValue(size_t size, size_t alignment)
+      : data_storage(Storage(size, alignment)),
+        chain(MakeConstructedAsyncValueRef<Chain>(storage)) {}
+
+  std::byte* GetStorage() {
+    assert(!GetAsyncValue()->IsError() && "unexpected error state");
+    assert(data_storage.has_value() && "unallocated data storage");
+    if (data_storage->is_inline) return &data_storage->inline_buffer[0];
+    return data_storage->allocated_buffer;
+  }
+
+  void AllocateStorage(size_t size, size_t alignment) {
+    data_storage = Storage(size, alignment);
+    // Storage memory will be initialized by the compiled executable.
+    ABSL_ANNOTATE_MEMORY_IS_INITIALIZED(GetStorage(), size);
+  }
+
+  tsl::AsyncValue* GetAsyncValue() const { return chain.AsPtr().value(); }
+
+  // If the requested async value storage is small, use the inlined storage.
+  // Fall back on dynamic allocation if the requested storage size is large.
+  struct Storage {
+    static const int kSize = 128;  // enough to fit memref descriptor of rank 5
+    static const int kAlign = alignof(std::max_align_t);
+
+    Storage(size_t size, size_t alignment)
+        : is_inline(CanStoreInline(size, alignment)) {
+      if (!is_inline)
+        // TODO: Handle AlignedMalloc
+        allocated_buffer =
+            reinterpret_cast<std::byte*>(malloc(size));
+    }
+
+    ~Storage() {
+      // TODP: Handle AlignedFree
+      if (!is_inline) free(allocated_buffer);
+    }
+
+    static bool CanStoreInline(size_t size, size_t alignment) {
+      assert(absl::has_single_bit(alignment));
+      return size <= kSize && alignment <= kAlign;
+    }
+
+    bool is_inline;
+    union {
+      alignas(kAlign) std::array<std::byte, kSize> inline_buffer;
+      std::byte* allocated_buffer;
     };
+  };
 
-  } // namespace runtime
-} // namespace iree
+  std::optional<Storage> data_storage;
 
-using iree::runtime::AsyncToken;
+  // Async value that tracks value readiness. It becomes available when result
+  // is written to the data storage and ready for consumption.
+  AsyncValueStorage<Chain> storage;
+  AsyncValueOwningRef<Chain> chain;
+};
+
+} // namespace openxla::runtime::async 
+
+using openxla::runtime::async::AsyncToken;
+using openxla::runtime::async::AsyncValue;
 
 IREE_API_EXPORT iree_status_t
 iree_async_token_create(iree_async_token_t **out_token)
