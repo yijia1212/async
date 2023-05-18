@@ -12,7 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(ASYNC_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(OPENXLA_ASYNC_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 # TODO: Fix this once the project is slotted into place.
 if(NOT IREE_ROOT_DIR)
@@ -42,12 +42,16 @@ add_subdirectory(runtime)
 add_subdirectory(tools)
 
 #-------------------------------------------------------------------------------
-# absl/concurrency dependencies
+# absl dependencies
 #-------------------------------------------------------------------------------
 
 add_subdirectory(third_party/abseil-cpp)
 add_subdirectory(third_party/tf_runtime)
 
 
+#-------------------------------------------------------------------------------
+# tfrt dependencies
+#-------------------------------------------------------------------------------
 
+add_subdirectory(build_tools/third_party/tfrt EXCLUDE_FROM_ALL)
 

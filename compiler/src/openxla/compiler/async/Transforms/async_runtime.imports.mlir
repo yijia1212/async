@@ -39,6 +39,7 @@ vm.import private @token.await(%token : !vm.ref<!async.token>)
 vm.import private @value.await.i32(%value : !vm.ref<!async.value<i32>>) -> i32
 vm.import private @value.await.i64(%value : !vm.ref<!async.value<i64>>) -> i64
 vm.import private @value.await.f32(%value : !vm.ref<!async.value<f32>>) -> f32
-vm.import private @value.await.f64(%value : !vm.ref<!async.value<f64>>) -> f64
+//TODO: iree does not support return f64
+//vm.import private @value.await.f64(%value : !vm.ref<!async.value<f64>>) -> f64
 
 } // module

@@ -86,7 +86,7 @@ class AwaitValueOpLowering : public OpConversionPattern<AwaitOp> {
     ImportOp importOp;
     if (resultType->isInteger(32)) {
       importOp = importSymbols.lookup<ImportOp>(
-          std::string(kAsyncAwaitValuePrefix) + "i32");
+          (kAsyncAwaitValuePrefix + "i32").str());
     } else if (resultType->isInteger(64)) {
       importOp = importSymbols.lookup<ImportOp>(
           (kAsyncAwaitValuePrefix + "i64").str());

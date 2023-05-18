@@ -1,4 +1,4 @@
-// Copyright 2022 The IREE Authors
+// Copyright 2023 The IREE Authors
 //
 // Licensed under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -21,12 +21,12 @@ extern "C" {
 //===----------------------------------------------------------------------===//
 
 IREE_API_EXPORT iree_status_t iree_loop_async_ctl(void* self,
-                                                   iree_loop_command_t command,
-                                                   const void* params,
-                                                   void** inout_ptr);
+                                                  iree_loop_command_t command,
+                                                  const void* params,
+                                                  void** inout_ptr);
 IREE_API_EXPORT iree_status_t
 iree_loop_async_using_storage_ctl(void* self, iree_loop_command_t command,
-                                   const void* params, void** inout_ptr);
+                                  const void* params, void** inout_ptr);
 
 // Returns a loop that doesn't really loop.
 // All operations are run as they are enqueued on the stack. This uses no

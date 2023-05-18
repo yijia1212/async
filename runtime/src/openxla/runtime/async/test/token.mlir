@@ -1,7 +1,7 @@
-// RUN: iree-compile %s --iree-execution-model=host-only | openxla-runner - example.main | FileCheck %s
+// RUN: iree-compile %s --compile-to=vm --iree-execution-model=host-only | openxla-runner - token.main | FileCheck %s
 
 module attributes {vm.toplevel} {
-  vm.module public @example {
+  vm.module public @token {
     vm.import private @async.token.create() -> !vm.ref<!async.token>
     vm.import private @async.token.query(%token : !vm.ref<!async.token>) -> i32
     vm.import private @async.token.signal(%token : !vm.ref<!async.token>)

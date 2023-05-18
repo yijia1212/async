@@ -9,12 +9,12 @@
 
 #include <stdint.h>
 
-#include "openxla/runtime/async/api.h"
-
 #include "iree/base/api.h"
 #include "iree/vm/api.h"
+#include "openxla/runtime/async/api.h"
 
 IREE_VM_DECLARE_TYPE_ADAPTERS(iree_async_token, iree_async_token_t);
+IREE_VM_DECLARE_TYPE_ADAPTERS(iree_async_value, iree_async_value_t);
 
 #ifdef __cplusplus
 extern "C" {

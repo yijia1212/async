@@ -14,10 +14,10 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file will be auto generated from async_runtime.imports.mlir in the future; for
-// now it's modified by hand but with strict alphabetical sorting required.
-// The order of these functions must be sorted ascending by name in a way
-// compatible with iree_string_view_compare.
+// This file will be auto generated from async_runtime.imports.mlir in the
+// future; for now it's modified by hand but with strict alphabetical sorting
+// required. The order of these functions must be sorted ascending by name in a
+// way compatible with iree_string_view_compare.
 //
 // Users are meant to `#define EXPORT_FN` to be able to access the information.
 // #define EXPORT_FN(name, arg_type, ret_type, target_fn)
@@ -30,10 +30,14 @@ EXPORT_FN("token.fail", iree_async_runtime_module_token_fail, r, v)
 EXPORT_FN("token.query", iree_async_runtime_module_token_query, r, i)
 EXPORT_FN("token.signal", iree_async_runtime_module_token_signal, r, v)
 
-// EXPORT_FN("value.await", iree_async_runtime_module_value_await, r, v)
-// EXPORT_FN("value.create", iree_async_runtime_module_value_create, II, r)
-// EXPORT_FN("value.fail", iree_async_runtime_module_value_fail, r, v)
-// EXPORT_FN("value.query", iree_async_runtime_module_value_query, r, i)
-// EXPORT_FN("value.signal", iree_async_runtime_module_value_signal, r, v)
+EXPORT_FN("value.await.i32", iree_async_runtime_module_value_await_i32, r, i)
+EXPORT_FN("value.await.i64", iree_async_runtime_module_value_await_i32, r, I)
+EXPORT_FN("value.await.f32", iree_async_runtime_module_value_await_f32, r, f)
+// TODO: iree does not support return f64
+//EXPORT_FN("value.await.f64", iree_async_runtime_module_value_await_f64, r, F)
+EXPORT_FN("value.create", iree_async_runtime_module_value_create, II, r)
+EXPORT_FN("value.fail", iree_async_runtime_module_value_fail, r, v)
+EXPORT_FN("value.query", iree_async_runtime_module_value_query, r, i)
+EXPORT_FN("value.signal", iree_async_runtime_module_value_signal, r, v)
 
 // clang-format on
