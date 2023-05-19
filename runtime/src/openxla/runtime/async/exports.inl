@@ -32,10 +32,10 @@ EXPORT_FN("token.signal", iree_async_runtime_module_token_signal, r, v)
 
 EXPORT_FN("value.await.i32", iree_async_runtime_module_value_await_i32, r, i)
 EXPORT_FN("value.await.i64", iree_async_runtime_module_value_await_i32, r, I)
-EXPORT_FN("value.await.f32", iree_async_runtime_module_value_await_f32, r, f)
+//EXPORT_FN("value.await.f32", iree_async_runtime_module_value_await_f32, r, f)
 // TODO: iree does not support return f64
 //EXPORT_FN("value.await.f64", iree_async_runtime_module_value_await_f64, r, F)
-EXPORT_FN("value.create", iree_async_runtime_module_value_create, II, r)
+EXPORT_FN("value.create", iree_async_runtime_module_value_create, v, r)
 EXPORT_FN("value.fail", iree_async_runtime_module_value_fail, r, v)
 EXPORT_FN("value.query", iree_async_runtime_module_value_query, r, i)
 EXPORT_FN("value.signal", iree_async_runtime_module_value_signal, r, v)

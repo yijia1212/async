@@ -25,7 +25,7 @@ iree_cc_library(
     "async_runtime.cpp"
   DEPS
     ::defs
-    concurrency::async_value
+    tfrt::async_value
     absl::base
     absl::status
     iree::base

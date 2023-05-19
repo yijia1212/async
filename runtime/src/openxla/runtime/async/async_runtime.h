@@ -85,7 +85,7 @@ IREE_API_EXPORT iree_status_t iree_async_value_get_available_value(
 // Returns a wait source reference to |async_token|
 // The async_token must be kept live for as long as the reference is live
 IREE_API_EXPORT iree_wait_source_t
-iree_async_value_await(iree_async_token_t *value);
+iree_async_value_await(iree_async_value_t *value);
 
 IREE_API_EXPORT iree_status_t iree_async_value_wait_source_ctl(
     iree_wait_source_t wait_source, iree_wait_source_command_t command,
@@ -95,7 +95,7 @@ IREE_API_EXPORT iree_status_t iree_async_value_wait_source_ctl(
 // iree_async_value_t implementation details
 //===----------------------------------------------------------------------===//
 
-IREE_API_EXPORT void iree_async_value_destroy(iree_async_value_t *token);
+IREE_API_EXPORT void iree_async_value_destroy(iree_async_value_t *value);
 IREE_API_EXPORT uint32_t iree_async_value_offsetof_counter();
 
 #ifdef __cplusplus

@@ -9,11 +9,14 @@ set(TFRT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 
 external_cc_library(
   PACKAGE
-   tfrt
+    tfrt
   NAME
     ref_count
   ROOT
     ${TFRT_ROOT}
+  INCLUDES
+    "${TFRT_ROOT}/include"
+    "${TFRT_BINARY_DIR}/include"
   HDRS
     "include/tfrt/concurrency/ref_count.h"
   COPTS
@@ -24,11 +27,14 @@ external_cc_library(
 
 external_cc_library(
   PACKAGE
-   tfrt
+    tfrt
   NAME
     concurrent_vector
   ROOT
     ${TFRT_ROOT}
+  INCLUDES
+    "${TFRT_ROOT}/include"
+    "${TFRT_BINARY_DIR}/include"
   HDRS
     "include/tfrt/concurrency/concurrent_vector.h"
   DEPS
@@ -44,9 +50,37 @@ external_cc_library(
   PACKAGE
     tfrt
   NAME
+    support
+  ROOT
+    ${TFRT_ROOT}
+  INCLUDES
+    "${TFRT_ROOT}/include"
+    "${TFRT_BINARY_DIR}/include"
+  HDRS
+    "include/tfrt/support/alloc.h"
+    "include/tfrt/support/logging.h"
+  SRCS
+    "lib/support/alloc.cc"
+    "lib/support/logging.cc"
+  DEPS
+    LLVMSupport
+  COPTS
+    -fno-rtti
+    -fno-exceptions
+  PUBLIC
+)
+
+
+external_cc_library(
+  PACKAGE
+    tfrt
+  NAME
     async_value
   ROOT
     ${TFRT_ROOT}
+  INCLUDES
+    "${TFRT_ROOT}/include"
+    "${TFRT_BINARY_DIR}/include"
   HDRS
     "include/tfrt/concurrency/async_value.h"
     "include/tfrt/concurrency/async_value_ref.h"
@@ -55,8 +89,10 @@ external_cc_library(
     "lib/concurrency/async_value.cc"
     "lib/concurrency/async_value_ref.cc"
   DEPS
+    LLVMSupport
     tfrt::concurrent_vector
     tfrt::ref_count
+    tfrt::support
     absl::base
     absl::status
   COPTS

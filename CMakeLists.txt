@@ -46,7 +46,6 @@ add_subdirectory(tools)
 #-------------------------------------------------------------------------------
 
 add_subdirectory(third_party/abseil-cpp)
-add_subdirectory(third_party/tf_runtime)
 
 
 #-------------------------------------------------------------------------------

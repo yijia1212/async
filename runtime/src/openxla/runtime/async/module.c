@@ -108,7 +108,7 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_token_fail,  //
 // IREE_STATUS_DEFERRED if one or more tokens are still pending and a wait
 // frame was entered.
 static iree_status_t iree_async_runtime_module_token_await_begin(
-    iree_vm_stack_t *stack, iree_async_token_t *token,
+    iree_vm_stack_t *stack, iree_async_token_t *token, iree_zone_id_t zone_id,
     iree_status_t *out_wait_status) {
   iree_vm_wait_frame_t *wait_frame = NULL;
   IREE_RETURN_IF_ERROR(iree_vm_stack_wait_enter(
@@ -136,8 +136,8 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_token_await,  //
     zone_id = z0;
     current_frame->pc = IREE_ASYNC_RUNTIME_MODULE_AWAIT_PC_RESUME;
     IREE_RETURN_AND_END_ZONE_IF_ERROR(
-        zone_id, iree_async_runtime_module_token_await_begin(stack, token,
-                                                             &wait_status));
+        zone_id, iree_async_runtime_module_token_await_begin(
+                     stack, token, zone_id, &wait_status));
     if (iree_status_is_deferred(wait_status)) {
       zone_id = 0;  // ownership transferred to wait frame
     }
@@ -172,6 +172,45 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_token_await,  //
 //===----------------------------------------------------------------------===//
 // iree_async_value_t
 //===----------------------------------------------------------------------===//
+IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_create,  //
+                   iree_async_runtime_module_state_t,       //
+                   v, r) {
+  iree_async_value_t *value = NULL;
+  iree_status_t status = iree_async_value_create(&value);
+  if (iree_status_is_ok(status)) {
+    rets->r0 = iree_async_value_move_ref(value);
+  } else {
+    iree_async_value_release(value);
+  }
+
+  return status;
+}
+
+IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_query,  //
+                   iree_async_runtime_module_state_t,      //
+                   r, i) {
+  assert(false && "unimplemented");
+  return iree_ok_status();
+}
+
+IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_signal,  //
+                   iree_async_runtime_module_state_t, r, v) {
+  assert(false && "unimplemented");
+  return iree_ok_status();
+}
+
+IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_fail,  //
+                   iree_async_runtime_module_state_t, r, v) {
+  assert(false && "unimplemented");
+  return iree_ok_status();
+}
+
+static iree_status_t iree_async_runtime_module_value_await_begin(
+    iree_vm_stack_t *stack, iree_async_value_t *value, iree_zone_id_t zone_id,
+    iree_status_t *out_wait_status) {
+  assert(false && "unimplmented");
+  return iree_ok_status();
+}
 
 static iree_status_t iree_async_runtime_module_value_await(
     iree_vm_stack_t *stack, const iree_vm_ref_t arg) {
@@ -184,6 +223,13 @@ static iree_status_t iree_async_runtime_module_value_await(
     IREE_RETURN_IF_ERROR(iree_async_value_check_deref(arg, &value));
     IREE_TRACE_ZONE_BEGIN(z0);
     zone_id = z0;
+    current_frame->pc = IREE_ASYNC_RUNTIME_MODULE_AWAIT_PC_RESUME;
+    IREE_RETURN_AND_END_ZONE_IF_ERROR(
+        zone_id, iree_async_runtime_module_value_await_begin(
+                     stack, value, zone_id, &wait_status));
+    if (iree_status_is_deferred(wait_status)) {
+      zone_id = 0;  // ownership transferred to wait frame
+    }
 
   } else {
   }
@@ -201,8 +247,8 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_await_i32,  //
     int32_t i = 0.0;
     iree_async_value_t *value = NULL;
     IREE_RETURN_IF_ERROR(iree_async_value_check_deref(args->r0, &value));
-    IREE_RETURN_IF_ERROR(iree_async_iree_async_value_get_available_value(
-        value, sizeof(int32_t), &i));
+    IREE_RETURN_IF_ERROR(iree_async_value_get_available_value(
+        value, sizeof(int32_t), (char *)&i));
     rets->i0 = i;
   } else if (iree_status_is_deferred(wait_status)) {
     status = wait_status;
@@ -224,8 +270,8 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_await_i64,  //
     int64_t i = 0.0;
     iree_async_value_t *value = NULL;
     IREE_RETURN_IF_ERROR(iree_async_value_check_deref(args->r0, &value));
-    IREE_RETURN_IF_ERROR(iree_async_iree_async_value_get_available_value(
-        value, sizeof(int64_t), &i));
+    IREE_RETURN_IF_ERROR(iree_async_value_get_available_value(
+        value, sizeof(int64_t), (char *)&i));
     rets->i0 = i;
   } else if (iree_status_is_deferred(wait_status)) {
     status = wait_status;
@@ -247,8 +293,8 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_await_f32,  //
     float f = 0.0;
     iree_async_value_t *value = NULL;
     IREE_RETURN_IF_ERROR(iree_async_value_check_deref(args->r0, &value));
-    IREE_RETURN_IF_ERROR(iree_async_iree_async_value_get_available_value(
-        value, sizeof(float), &f));
+    IREE_RETURN_IF_ERROR(
+        iree_async_value_get_available_value(value, sizeof(float), (char *)&f));
     rets->f0 = f;
   } else if (iree_status_is_deferred(wait_status)) {
     status = wait_status;
@@ -260,16 +306,10 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_await_f32,  //
   return status;
 }
 
-IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_fail,  //
-                   iree_async_runtime_module_state_t, r, v) {
-  return iree_ok_status();
-}
-
 //===----------------------------------------------------------------------===//
 // VM module interface implementation
 //===----------------------------------------------------------------------===//
 
-// NOTE: this must match the ordering of the iree_hal_module_exports_ table.
 static const iree_vm_native_function_ptr_t iree_async_runtime_module_funcs_[] =
     {
 #define EXPORT_FN(name, target_fn, arg_types, ret_types)       \
