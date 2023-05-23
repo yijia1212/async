@@ -7,7 +7,7 @@
 #ifndef ASYNC_ASYNC_H_
 #define ASYNC_ASYNC_H_
 
-#include "mlir/IR/Types.h"
+#include "iree/compiler/Dialect/Util/IR/UtilTypes.h"
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/IR/Dialect.h"
@@ -15,6 +15,7 @@
 #include "mlir/IR/OpImplementation.h"
 #include "mlir/IR/PatternMatch.h"
 #include "mlir/IR/SymbolTable.h"
+#include "mlir/IR/Types.h"
 #include "mlir/Interfaces/CallInterfaces.h"
 #include "mlir/Interfaces/ControlFlowInterfaces.h"
 #include "mlir/Interfaces/InferTypeOpInterface.h"
@@ -25,19 +26,19 @@
 //===----------------------------------------------------------------------===//
 
 #define GET_TYPEDEF_CLASSES
-#include "openxla/compiler/async/Dialect/Async/IR/AsyncTypes.h.inc"
+#include "openxla/compiler/Dialect/Async/IR/AsyncTypes.h.inc"
 
 //===----------------------------------------------------------------------===//
 // Async Dialect
 //===----------------------------------------------------------------------===//
 
-#include "openxla/compiler/async/Dialect/Async/IR/AsyncDialect.h.inc"
+#include "openxla/compiler/Dialect/Async/IR/AsyncDialect.h.inc"
 
 //===----------------------------------------------------------------------===//
 // Async Dialect Operations
 //===----------------------------------------------------------------------===//
 
 #define GET_OP_CLASSES
-#include "openxla/compiler/async/Dialect/Async/IR/AsyncOps.h.inc"
+#include "openxla/compiler/Dialect/Async/IR/AsyncOps.h.inc"
 
-#endif // ASYNC_ASYNC_H_
+#endif  // ASYNC_ASYNC_H_

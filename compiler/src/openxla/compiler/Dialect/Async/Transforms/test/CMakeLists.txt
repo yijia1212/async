@@ -5,3 +5,13 @@
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
 iree_add_all_subdirs()
+
+iree_lit_test_suite(
+  NAME
+    lit
+  SRCS
+    "async_to_runtime.mlir"
+  TOOLS
+    FileCheck
+    iree-opt
+)

@@ -15,8 +15,8 @@ include "mlir/IR/SymbolInterfaces.td"
 include "mlir/IR/FunctionInterfaces.td"
 include "mlir/IR/OpAsmInterface.td"
 
-include "openxla/compiler/async/Dialect/Async/IR/AsyncDialect.td"
-include "openxla/compiler/async/Dialect/Async/IR/AsyncTypes.td"
+include "openxla/compiler/Dialect/Async/IR/AsyncDialect.td"
+include "openxla/compiler/Dialect/Async/IR/AsyncTypes.td"
 
 //===----------------------------------------------------------------------===//
 // Async op definitions

@@ -1,4 +1,4 @@
-// RUN: mlir-opt %s -split-input-file -verify-diagnostics | FileCheck %s
+// RUN: mlir-opt %s --iree-plugin=openxla-async -split-input-file -verify-diagnostics | FileCheck %s
 
 // FileCheck test must have at least one CHECK statement.
 // CHECK-LABEL: @no_op

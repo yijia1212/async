@@ -9,9 +9,8 @@
 #include "mlir/IR/Location.h"
 #include "mlir/IR/MLIRContext.h"
 #include "mlir/Pass/Pass.h"
-
-#include "openxla/compiler/async/Dialect/Async/IR/Async.h"
-#include "openxla/compiler/async/Transforms/Passes.h"
+#include "openxla/compiler/Dialect/Async/IR/Async.h"
+#include "openxla/compiler/Dialect/Async/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::iree_compiler;
@@ -20,10 +19,10 @@ namespace detail {
 namespace {
 
 #define GEN_PASS_REGISTRATION
-#include "openxla/compiler/async/Transforms/Passes.h.inc"
+#include "openxla/compiler/Dialect/Async/Transforms/Passes.h.inc"
 
 }  // namespace
-}  // namespace detail 
+}  // namespace detail
 
 namespace {
 
@@ -49,6 +48,6 @@ IREE_DEFINE_COMPILER_OPTION_FLAGS(AsyncOptions);
 
 extern "C" bool iree_register_compiler_plugin_openxla_async(
     mlir::iree_compiler::PluginRegistrar *registrar) {
-  registrar->registerPlugin<AsyncSession>("openxla_async");
+  registrar->registerPlugin<AsyncSession>("openxla-async");
   return true;
 }

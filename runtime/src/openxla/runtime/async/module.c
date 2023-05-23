@@ -260,32 +260,9 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_await_i32,  //
   return status;
 }
 
-IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_await_i64,  //
+IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_await_ref,  //
                    iree_async_runtime_module_state_t,          //
-                   r, I) {
-  iree_status_t wait_status =
-      iree_async_runtime_module_value_await(stack, args->r0);
-  iree_status_t status = iree_ok_status();
-  if (iree_status_is_ok(wait_status)) {
-    int64_t i = 0.0;
-    iree_async_value_t *value = NULL;
-    IREE_RETURN_IF_ERROR(iree_async_value_check_deref(args->r0, &value));
-    IREE_RETURN_IF_ERROR(iree_async_value_get_available_value(
-        value, sizeof(int64_t), (char *)&i));
-    rets->i0 = i;
-  } else if (iree_status_is_deferred(wait_status)) {
-    status = wait_status;
-  } else {
-    // Fail the invocation
-    status = wait_status;
-  }
-
-  return status;
-}
-
-IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_await_f32,  //
-                   iree_async_runtime_module_state_t,          //
-                   r, f) {
+                   r, r) {
   iree_status_t wait_status =
       iree_async_runtime_module_value_await(stack, args->r0);
   iree_status_t status = iree_ok_status();
@@ -295,7 +272,7 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_value_await_f32,  //
     IREE_RETURN_IF_ERROR(iree_async_value_check_deref(args->r0, &value));
     IREE_RETURN_IF_ERROR(
         iree_async_value_get_available_value(value, sizeof(float), (char *)&f));
-    rets->f0 = f;
+    // rets->r0 = f;
   } else if (iree_status_is_deferred(wait_status)) {
     status = wait_status;
   } else {

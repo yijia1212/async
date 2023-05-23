@@ -27,7 +27,8 @@ iree_cc_library(
     MLIRFuncDialect
     MLIRIR
     MLIRSupport
-    openxla::compiler::async::defs
+    openxla::compiler::Dialect::defs
+    iree::compiler::Dialect::Util::IR
   PUBLIC
 )
 

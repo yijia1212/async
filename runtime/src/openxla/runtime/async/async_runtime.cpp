@@ -6,8 +6,6 @@
 
 #include "openxla/runtime/async/async_runtime.h"
 
-#include <stdio.h>
-
 #include <cstddef>
 #include <optional>
 
@@ -203,12 +201,14 @@ IREE_API_EXPORT iree_status_t iree_async_token_wait_source_ctl(
 
 IREE_API_EXPORT iree_wait_source_t
 iree_async_token_await(iree_async_token_t *token) {
-  if (!token) return iree_wait_source_immediate();
-  return (iree_wait_source_t){
-      .self = token,
-      .data = 0,
-      .ctl = iree_async_token_wait_source_ctl,
-  };
+  // if (!token) return iree_wait_source_immediate();
+  // return (iree_wait_source_t){
+  //     .self = token,
+  //     .data = 0,
+  //     .ctl = iree_async_token_wait_source_ctl,
+  // };
+
+  return iree_wait_source_immediate();
 }
 
 IREE_API_EXPORT iree_status_t iree_async_value_get_available_value(
@@ -259,12 +259,13 @@ iree_async_value_and_then(iree_async_value_t *value,
 
 IREE_API_EXPORT iree_wait_source_t
 iree_async_value_await(iree_async_value_t *value) {
-  if (!value) return iree_wait_source_immediate();
-  return (iree_wait_source_t){
-      .self = value,
-      .data = 0,
-      .ctl = iree_async_value_wait_source_ctl,
-  };
+  // if (!value) return iree_wait_source_immediate();
+  // return (iree_wait_source_t){
+  //     .self = value,
+  //     .data = 0,
+  //     .ctl = iree_async_value_wait_source_ctl,
+  // };
+  return iree_wait_source_immediate();
 }
 
 IREE_API_EXPORT iree_status_t iree_async_value_wait_source_ctl(

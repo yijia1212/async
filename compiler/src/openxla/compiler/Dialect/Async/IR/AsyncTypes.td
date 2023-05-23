@@ -9,7 +9,7 @@
 #define ASYNC_TYPES
 
 include "mlir/IR/AttrTypeBase.td"
-include "openxla/compiler/async/Dialect/Async/IR/AsyncDialect.td"
+include "openxla/compiler/Dialect/Async/IR/AsyncDialect.td"
 
 //===----------------------------------------------------------------------===//
 // Async Types
@@ -28,21 +28,32 @@ def Async_TokenType : Async_Type<"Token", "token"> {
   }];
 }
 
-
 def Async_ValueType : Async_Type<"Value", "value"> {
   let summary = "async value type";
   let description = [{
     `async.value` represents a value returned by asynchronous operations,
     which may or may not be available currently, but will be available at some
     point in the future.
+
+    `valueType` can be omitted from the type when lowering to runtime function
+    calls (just a `!async.value`). At runtime, valueType becomes a property of 
+    reference counted runtime values.
   }];
 
   let parameters = (ins "Type":$valueType);
   let builders = [
+    TypeBuilder<(ins), [{
+      return $_get($_ctxt, iree_compiler::IREE::Util::ObjectType());
+    }]>,
     TypeBuilderWithInferredContext<(ins "Type":$valueType), [{
       return $_get(valueType.getContext(), valueType);
     }]>
   ];
+
+  let extraClassDeclaration = [{
+      bool isOpaque();
+  }];
+
   let hasCustomAssemblyFormat = 1;
   let skipDefaultBuilders = 1;
 }

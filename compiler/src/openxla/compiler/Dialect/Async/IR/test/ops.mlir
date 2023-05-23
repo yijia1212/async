@@ -1,4 +1,5 @@
-
+// RUN: iree-opt --iree-plugin=openxla-async --split-input-file %s \
+// RUN:   | FileCheck %s
 
 // CHECK-LABEL: @identity_token
 func.func @identity_token(%arg0: !async.token) -> !async.token {
