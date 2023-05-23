@@ -76,7 +76,7 @@ func::FuncOp AsyncAPI::getTokenAwait(PatternRewriter &rewriter,
                                      ModuleOp module) {
   MLIRContext *ctx = module->getContext();
   SmallVector<Type> args{TokenType::get(ctx)};
-  auto functionType = FunctionType::get(ctx, args, /*outputs=*/{});
+  auto functionType = FunctionType::get(ctx, args, /*rets=*/{});
 
   return addDecl(rewriter, module, StringAttr::get(ctx, "async.token.await"),
                  functionType);
@@ -103,6 +103,42 @@ func::FuncOp AsyncAPI::getValueAwaitRef(PatternRewriter &rewriter,
   return addDecl(rewriter, module,
                  StringAttr::get(ctx, "async.value.await.ref"), functionType);
 }
+
+class FuncOpConversion : public OpConversionPattern<func::FuncOp> {
+  using OpConversionPattern::OpConversionPattern;
+
+  LogicalResult matchAndRewrite(
+      func::FuncOp op, OpAdaptor adaptor,
+      ConversionPatternRewriter &rewriter) const override {
+    FunctionType type = op.getFunctionType();
+    // Convert the original function arguments.
+    TypeConverter::SignatureConversion result(type.getNumInputs());
+    for (unsigned i = 0; i < type.getNumInputs(); ++i) {
+      if (failed(getTypeConverter()->convertSignatureArg(i, type.getInput(i),
+                                                         result))) {
+        return failure();
+      }
+    }
+    // Convert the original function results.
+    SmallVector<Type, 1> converted_results;
+    if (failed(getTypeConverter()->convertTypes(type.getResults(),
+                                                converted_results))) {
+      return failure();
+    }
+    if (failed(rewriter.convertRegionTypes(&op.getBody(), *getTypeConverter(),
+                                           &result))) {
+      return failure();
+    }
+
+    // Update the function signature.
+    rewriter.updateRootInPlace(op, [&] {
+      op.setType(FunctionType::get(op.getContext(), result.getConvertedTypes(),
+                                   converted_results));
+    });
+
+    return success();
+  }
+};
 
 //===----------------------------------------------------------------------===//
 // Base class for all Async op conversions
@@ -146,7 +182,6 @@ struct ConvertTokenOp : public AsyncOpConversionPattern<AwaitOp> {
 
 struct ConvertValueScalarOp : public AsyncOpConversionPattern<AwaitOp> {
   using AsyncOpConversionPattern::AsyncOpConversionPattern;
-  using OpAdaptor = typename AsyncOpConversionPattern<AwaitOp>::OpAdaptor;
 
   LogicalResult matchAndRewrite(
       AwaitOp op, OpAdaptor adaptor,
@@ -159,9 +194,11 @@ struct ConvertValueScalarOp : public AsyncOpConversionPattern<AwaitOp> {
     ImplicitLocOpBuilder b(op->getLoc(), rewriter);
     if (resultType->isInteger(32)) {
       auto funcOp = api->getValueAwaitI32(rewriter, module);
-      rewriter.replaceOpWithNewOp<func::CallOp>(op, funcOp,
-                                                adaptor.getOperand());
-
+      // auto callOp = b.create<func::CallOp>(funcOp.getSymName(), *resultType,
+      //                                      adaptor.getOperands());
+      // rewriter.replaceOp(op, callOp.getResult(0));
+      rewriter.replaceOpWithNewOp<func::CallOp>(
+          op, funcOp.getSymName(), *resultType, adaptor.getOperands());
     } else {
       return rewriter.notifyMatchFailure(op,
                                          "unsupported awaitable scalar type");
@@ -197,7 +234,6 @@ struct ConvertValueRefOp : public AsyncOpConversionPattern<AwaitOp> {
                                          adaptor.getOperands());
     rewriter.replaceOpWithNewOp<IREE::Util::CastOp>(op, op.getResultTypes(),
                                                     callOp.getResult(0));
-    module.dump();
     return success();
   }
 };
@@ -208,6 +244,7 @@ void populateAsyncToRuntimePatterns(mlir::TypeConverter &typeConverter,
   MLIRContext *ctx = patterns.getContext();
   auto api = std::make_shared<AsyncAPI>();
 
+  patterns.insert<FuncOpConversion>(typeConverter, ctx);
   patterns.insert<ConvertTokenOp>(typeConverter, ctx, api);
   patterns.insert<ConvertValueScalarOp>(typeConverter, ctx, api);
   patterns.insert<ConvertValueRefOp>(typeConverter, ctx, api);

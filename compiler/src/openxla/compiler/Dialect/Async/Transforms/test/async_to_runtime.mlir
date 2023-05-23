@@ -11,8 +11,8 @@ func.func @await_token(%arg0: !async.token){
 
 // -----
 
-// CHECK-LABEL: @await_value
-func.func @await_value(%arg0: !async.value<i32>) -> i32 {
+// CHECK-LABEL: @await_scalar_value
+func.func @await_scalar_value(%arg0: !async.value<i32>) -> i32 {
   // CHECK: async.value.await.i32 %arg0
   %0 = async.await %arg0 : !async.value<i32>
   return %0 : i32
@@ -20,7 +20,7 @@ func.func @await_value(%arg0: !async.value<i32>) -> i32 {
 
 // -----
 
-func.func @await_value(%arg0: !async.value<memref<2xi32>>) -> memref<2xi32> {
+func.func @await_memref_value(%arg0: !async.value<memref<2xi32>>) -> memref<2xi32> {
   %0 = async.await %arg0 : !async.value<memref<2xi32>>
   return %0 : memref<2xi32>
 }

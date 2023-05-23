@@ -49,6 +49,10 @@ void AsyncToAsyncRuntimePass::runOnOperation() {
   ConversionTarget conversionTarget(*context);
   conversionTarget.addIllegalDialect<async::AsyncDialect>();
   conversionTarget.addLegalDialect<func::FuncDialect>();
+  conversionTarget.addDynamicallyLegalOp<func::FuncOp>([&](func::FuncOp op) {
+    return typeConverter.isSignatureLegal(op.getFunctionType()) &&
+           typeConverter.isLegal(&op.getBody());
+  });
   conversionTarget.addLegalDialect<IREE::Util::UtilDialect>();
 
   RewritePatternSet patterns(&getContext());

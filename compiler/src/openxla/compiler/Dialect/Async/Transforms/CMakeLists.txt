@@ -19,6 +19,7 @@ iree_cc_library(
     openxla::compiler::Dialect::Async::IR
     openxla::compiler::Dialect::Async::Conversion::AsyncToRuntime
     openxla::compiler::Dialect::defs
+    iree::compiler::Dialect::Util::IR
   PUBLIC
 )
 

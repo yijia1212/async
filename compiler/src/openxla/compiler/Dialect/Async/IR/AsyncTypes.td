@@ -43,7 +43,7 @@ def Async_ValueType : Async_Type<"Value", "value"> {
   let parameters = (ins "Type":$valueType);
   let builders = [
     TypeBuilder<(ins), [{
-      return $_get($_ctxt, iree_compiler::IREE::Util::ObjectType());
+      return $_get($_ctxt, Type());
     }]>,
     TypeBuilderWithInferredContext<(ins "Type":$valueType), [{
       return $_get(valueType.getContext(), valueType);
