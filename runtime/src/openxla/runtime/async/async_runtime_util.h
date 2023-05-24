@@ -9,51 +9,58 @@
 
 #include <cstddef>
 
-#include "concurrency/async_value.h"
-#include "concurrency/async_value_ref.h"
+#include "iree/vm/value.h"
 
 namespace openxla::runtime::async {
-struct AsyncToken;
-struct AsyncValue;
+// Returns the  IREE VM value type (eg, F32) corresponding to the given
+// template parameter native type (eg, float).
+template <typename NativeT>
+iree_vm_value_type_t NativeToVMValueType() {
+  // Make the expression depend on the template parameter NativeT so
+  // that this compile-time error only appears if this function is
+  // instantiated with some concrete type that is not specialized
+  // below.
+  static_assert(!std::is_same<NativeT, NativeT>::value,
+                "Cannot map native type to vm type.");
+  return IREE_VM_VALUE_TYPE_NONE;
+}
 
-template <typename T>
-AsyncValue* AsValue(
-    tsl::AsyncValueRef<T> value, size_t size, size_t alignment,
-    absl::FunctionRef<void(const T*, std::byte* storage)> write) {
-  Value* runtime_async_value = AsyncRuntime::CreateValue(size, alignment);
-  value.AndThen([runtime_async_value, write](absl::StatusOr<T*> status_or) {
-    if (!status_or.ok()) {
-      AsyncRuntime::SetError(runtime_async_value);
-    } else {
-      auto* store = AsyncRuntime::GetStorage(runtime_async_value);
-      write(*status_or, store);
-      AsyncRuntime::SetAvailable(runtime_async_value);
-    }
-  });
-  return runtime_async_value;
+template <>
+inline iree_vm_value_type_t NativeToVMValueType<int8_t>() {
+  return IREE_VM_VALUE_TYPE_I8;
+}
+
+template <>
+inline iree_vm_value_type_t NativeToVMValueType<int16_t>() {
+  return IREE_VM_VALUE_TYPE_I16;
+}
+
+template <>
+inline iree_vm_value_type_t NativeToVMValueType<int32_t>() {
+  return IREE_VM_VALUE_TYPE_I32;
+}
+
+template <>
+inline iree_vm_value_type_t NativeToVMValueType<int64_t>() {
+  return IREE_VM_VALUE_TYPE_I64;
+}
+
+template <>
+inline iree_vm_value_type_t NativeToVMValueType<float>() {
+  return IREE_VM_VALUE_TYPE_F32;
+}
+
+template <>
+inline iree_vm_value_type_t NativeToVMValueType<double>() {
+  return IREE_VM_VALUE_TYPE_F64;
 }
 
 template <typename T>
-AsyncValue* AsValue(
-    tsl::AsyncValueRef<T> value,
-    absl::FunctionRef<std::pair<size_t, size_t>(const T*)> size_and_alignment,
-    absl::FunctionRef<void(const T*, std::byte* storage)> write) {
-  AsyncValue* runtime_async_value = AsyncRuntime::CreateValue();
-  value.AndThen([runtime_async_value, size_and_alignment,
-                 write](absl::StatusOr<T*> status_or) {
-    if (!status_or.ok()) {
-      AsyncRuntime::SetError(runtime_async_value);
-    } else {
-      auto size_alignment = size_and_alignment(*status_or);
-      AsyncRuntime::AllocateStorage(runtime_async_value, size_alignment.first,
-                                    size_alignment.second);
-      auto* store = AsyncRuntime::GetStorage(runtime_async_value);
-      write(*status_or, store);
-      AsyncRuntime::SetAvailable(runtime_async_value);
-    }
-  });
-  return runtime_async_value;
-}
+using EnableIfScalarType = typename std::enable_if_t<
+    std::disjunction_v<std::is_same<T, float>, std::is_same<T, double>,
+                       std::is_same<T, int8_t>, std::is_same<T, int16_t>,
+                       std::is_same<T, int32_t>, std::is_same<T, int64_t>>>;
+
 }  // namespace openxla::runtime::async
 
 #endif  // OPENXLA_RUNTIME_ASYNC_ASYNCRUNTIME_UTIL_H_

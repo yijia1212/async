@@ -1,9 +1,9 @@
 // RUN: iree-compile %s --compile-to=vm --iree-execution-model=host-only | openxla-runner - token.main | FileCheck %s
 
 module {
-  func.func @await_token(%arg0: !async.token) {
-    call @async.token.await(%arg0) : (!async.token) -> ()
+  func.func @await_token(%arg0: !async.value) {
+    call @async.value.await.token(%arg0) : (!async.value) -> ()
     return
   }
-  func.func private @async.token.await(!async.token)
+  func.func private @async.value.await.token(!async.value)
 }

@@ -22,6 +22,7 @@ iree_cc_library(
     "api.h"
   SRCS
     "async_runtime.h"
+    "async_runtime_util.h"
     "async_runtime.cpp"
   DEPS
     ::defs
