@@ -38,6 +38,11 @@ IREE_API_EXPORT iree_status_t iree_async_value_get_scalar_value(
     iree_async_value_t *value, iree_vm_value_type_t type, char *buffer) {
   AsyncValue *val = reinterpret_cast<AsyncValue *>(value);
   IREE_ASSERT_ARGUMENT(val);
+  if (val->GetElementType() != type) {
+    return iree_make_status(
+        IREE_STATUS_INVALID_ARGUMENT,
+        "Failed to extract async value due to incompatible type");
+  }
   *buffer = val->get<int32_t>();
   return iree_ok_status();
 }

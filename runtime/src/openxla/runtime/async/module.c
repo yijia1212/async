@@ -191,8 +191,6 @@ IREE_VM_ABI_EXPORT(iree_async_runtime_module_async_value_await_i32,  //
     IREE_RETURN_IF_ERROR(iree_async_value_check_deref(args->r0, &value));
     IREE_RETURN_IF_ERROR(iree_async_value_get_scalar_value(
         value, IREE_VM_VALUE_TYPE_I32, (char *)&i));
-    fprintf(stdout, "await begin%d\n", i);
-    fflush(stdout);
     rets->i0 = i;
   } else if (iree_status_is_deferred(wait_status)) {
     status = wait_status;

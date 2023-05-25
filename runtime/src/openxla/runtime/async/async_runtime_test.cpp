@@ -6,14 +6,12 @@
 
 #include "openxla/runtime/async/async_runtime_test.h"
 
-#include <iostream>
 #include <thread>
 
 #include "openxla/runtime/async/async_runtime_cc.h"
 #include "tfrt/concurrency/async_value_ref.h"
 
 extern "C" iree_async_value_t *async_runtime_test() {
-  std::cout << "runtime test " << std::endl;
   tsl::AsyncValueRef<int32_t> value =
       tsl::MakeAvailableAsyncValueRef<int32_t>(42);
   return reinterpret_cast<iree_async_value_t *>(

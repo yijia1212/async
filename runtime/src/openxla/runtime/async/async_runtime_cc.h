@@ -81,6 +81,8 @@ class AsyncValue : public iree::vm::RefObject<AsyncValue> {
 
   bool IsError() const { return value_->IsError(); }
 
+  iree_vm_value_type_t GetElementType() const { return type_; }
+
  private:
   iree_vm_value_type_t type_;
   tsl::RCReference<tsl::AsyncValue> value_;
