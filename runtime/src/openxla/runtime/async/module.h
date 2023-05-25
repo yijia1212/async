@@ -9,19 +9,17 @@
 
 #include <stdint.h>
 
-#include "openxla/runtime/async/types.h"
-#include "openxla/runtime/async/api.h"
-
 #include "iree/base/api.h"
 #include "iree/vm/api.h"
+#include "openxla/runtime/async/api.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif  // __cplusplus
 
-IREE_API_EXPORT iree_status_t iree_async_runtime_module_create(iree_vm_instance_t* instance,
-                                              iree_allocator_t host_allocator,
-                                              iree_vm_module_t** out_module);
+IREE_API_EXPORT iree_status_t iree_async_runtime_module_create(
+    iree_vm_instance_t* instance, iree_allocator_t host_allocator,
+    iree_vm_module_t** out_module);
 #ifdef __cplusplus
 }  // extern "C"
 #endif  // __cplusplus

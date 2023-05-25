@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
   iree_vm_instance_t* instance = NULL;
   IREE_CHECK_OK(iree_vm_instance_create(IREE_VM_TYPE_CAPACITY_DEFAULT,
                                         allocator, &instance));
-  IREE_CHECK_OK(iree_async_runtime_module_register_all_types(instance));
+  IREE_CHECK_OK(openxla_async_runtime_module_register_types(instance));
   // Create the custom module that can be reused across contexts.
   iree_vm_module_t* async_runtime_module = NULL;
   IREE_CHECK_OK(iree_async_runtime_module_create(instance, allocator,

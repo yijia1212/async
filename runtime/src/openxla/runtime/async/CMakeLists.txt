@@ -22,7 +22,6 @@ iree_cc_library(
     "api.h"
   SRCS
     "async_runtime.h"
-    "async_runtime_util.h"
     "async_runtime_cc.h"
     "async_runtime.cpp"
   DEPS
@@ -63,7 +62,6 @@ iree_cc_library(
     "module.c"
   DEPS
     ::defs
-    ::types
     ::loop_async
     ::async_runtime
     ::async_runtime_test
@@ -74,20 +72,7 @@ iree_cc_library(
   PUBLIC
 )
 
-iree_cc_library(
-  NAME
-    types
-  HDRS
-    "types.h"
-  SRCS
-    "types.c"
-  DEPS
-    ::defs
-    ::async_runtime
-    iree::base
-    iree::vm
-  PUBLIC
-)
+
 
 iree_cc_library(
   NAME

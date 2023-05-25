@@ -10,7 +10,6 @@
 #include <optional>
 
 #include "openxla/runtime/async/async_runtime_cc.h"
-#include "openxla/runtime/async/async_runtime_util.h"
 #include "tfrt/concurrency/async_value.h"
 #include "tfrt/concurrency/async_value_ref.h"
 #include "tfrt/concurrency/chain.h"
@@ -147,4 +146,26 @@ iree_async_value_await(iree_async_value_t *value) {
   wait_source.data = 0;
   wait_source.ctl = iree_async_value_wait_source_ctl;
   return wait_source;
+}
+
+IREE_VM_DEFINE_TYPE_ADAPTERS(iree_async_value, iree_async_value_t);
+
+static iree_status_t RegisterAsyncValueType(
+    iree_vm_instance_t *instance, const char *type_name,
+    iree_vm_ref_type_t *out_registration) {
+  static iree_vm_ref_type_descriptor_t descriptor = {0};
+
+  descriptor.type_name = iree_make_cstring_view(type_name);
+  descriptor.offsetof_counter = AsyncValue::offsetof_counter();
+  descriptor.destroy = AsyncValue::DirectDestroy;
+
+  return iree_vm_instance_register_type(instance, &descriptor,
+                                        out_registration);
+}
+
+extern "C" iree_status_t openxla_async_runtime_module_register_types(
+    iree_vm_instance_t *instance) {
+  IREE_RETURN_IF_ERROR(RegisterAsyncValueType(instance, "async.value",
+                                              &iree_async_value_registration));
+  return iree_ok_status();
 }
