@@ -9,6 +9,7 @@
 
 #include <cstddef>
 
+#include "iree/vm/ref.h"
 #include "iree/vm/value.h"
 
 namespace openxla::runtime::async {

@@ -4,38 +4,20 @@
 // See https://llvm.org/LICENSE.txt for license information.
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 
-//===----------------------------------------------------------------------===//
-//
-//         ██     ██  █████  ██████  ███    ██ ██ ███    ██  ██████
-//         ██     ██ ██   ██ ██   ██ ████   ██ ██ ████   ██ ██
-//         ██  █  ██ ███████ ██████  ██ ██  ██ ██ ██ ██  ██ ██   ███
-//         ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
-//          ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████
-//
-//===----------------------------------------------------------------------===//
-//
-// This file will be auto generated from async_runtime.imports.mlir in the
-// future; for now it's modified by hand but with strict alphabetical sorting
-// required. The order of these functions must be sorted ascending by name in a
-// way compatible with iree_string_view_compare.
-//
-// Users are meant to `#define EXPORT_FN` to be able to access the information.
-// #define EXPORT_FN(name, arg_type, ret_type, target_fn)
-
 // clang-format off
 
-EXPORT_FN("token.await", iree_async_runtime_module_token_await, r, v)
-EXPORT_FN("token.create", iree_async_runtime_module_token_create, v, r)
-EXPORT_FN("token.fail", iree_async_runtime_module_token_fail, r, v)
-EXPORT_FN("token.query", iree_async_runtime_module_token_query, r, i)
-EXPORT_FN("token.signal", iree_async_runtime_module_token_signal, r, v)
+//Test function
+EXPORT_FN("test.value", iree_async_runtime_module_test_async_value, v, r)
 
-EXPORT_FN("value.create", iree_async_runtime_module_value_create, v, r)
-EXPORT_FN("value.fail", iree_async_runtime_module_value_fail, r, v)
-EXPORT_FN("value.query", iree_async_runtime_module_value_query, r, i)
-EXPORT_FN("value.signal", iree_async_runtime_module_value_signal, r, v)
+//Async function
+EXPORT_FN("value.await.i32", iree_async_runtime_module_async_value_await_i32, r, i)
+EXPORT_FN("value.await.token", iree_async_runtime_module_async_value_await_token, r, v)
 
-EXPORT_FN("value.await.i32", iree_async_runtime_module_value_await_i32, r, i)
-EXPORT_FN("value.await.ref", iree_async_runtime_module_value_await_ref, r, r)
+EXPORT_FN("value.create.i32", iree_async_runtime_module_create_async_value_i32, v, r)
+EXPORT_FN("value.create.token", iree_async_runtime_module_create_async_token, v, r)
+
+EXPORT_FN("value.fail", iree_async_runtime_module_fail_async_value, r, v)
+EXPORT_FN("value.query", iree_async_runtime_module_query_async_value, r, i)
+EXPORT_FN("value.signal", iree_async_runtime_module_signal_async_value, r, v)
 
 // clang-format on

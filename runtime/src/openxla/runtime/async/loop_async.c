@@ -101,11 +101,11 @@ static void iree_loop_async_run_wait_one(iree_loop_t loop,
 
   iree_timeout_t timeout = iree_make_deadline(params.deadline_ns);
 
-  if (params.wait_source.ctl == iree_async_token_wait_source_ctl) {
-    iree_async_token_t *token = (iree_async_token_t *)params.wait_source.self;
+  if (params.wait_source.ctl == iree_async_value_wait_source_ctl) {
+    iree_async_value_t *value = (iree_async_value_t *)params.wait_source.self;
     // asyn_token_wait
     iree_status_t status =
-        iree_async_token_and_then(token, params.callback, loop);
+        iree_async_value_and_then(value, params.callback, loop);
     if (!iree_status_is_ok(status)) {
       iree_loop_async_emit_error(loop, status);
     }

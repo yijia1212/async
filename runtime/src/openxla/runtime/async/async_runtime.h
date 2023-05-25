@@ -9,8 +9,9 @@
 
 #include "iree/base/api.h"
 #include "iree/base/status.h"
+#include "iree/vm/ref.h"
+#include "iree/vm/value.h"
 
-typedef struct iree_async_token_t iree_async_token_t;
 typedef struct iree_async_value_t iree_async_value_t;
 
 #ifdef __cplusplus
@@ -18,50 +19,17 @@ extern "C" {
 #endif  // __cplusplus
 
 //===----------------------------------------------------------------------===//
-// iree_async_token_t api
-//===----------------------------------------------------------------------===//
-
-IREE_API_EXPORT iree_status_t
-iree_async_token_create(iree_async_token_t **out_token);
-
-IREE_API_EXPORT iree_status_t iree_async_token_query(iree_async_token_t *token);
-
-IREE_API_EXPORT iree_status_t
-iree_async_token_signal(iree_async_token_t *token);
-
-IREE_API_EXPORT void iree_async_token_fail(iree_async_token_t *token);
-
-IREE_API_EXPORT iree_status_t iree_async_token_wait(iree_async_token_t *token,
-                                                    iree_timeout_t timeout);
-
-// Releases |token| and destroys it if the caller is the last owner.
-IREE_API_EXPORT void iree_async_token_release(iree_async_token_t *token);
-
-IREE_API_EXPORT iree_status_t iree_async_token_and_then(
-    iree_async_token_t *token, iree_loop_callback_t callback, iree_loop_t loop);
-
-// Returns a wait source reference to |async_token|
-// The async_token must be kept live for as long as the reference is live
-IREE_API_EXPORT iree_wait_source_t
-iree_async_token_await(iree_async_token_t *token);
-
-IREE_API_EXPORT iree_status_t iree_async_token_wait_source_ctl(
-    iree_wait_source_t wait_source, iree_wait_source_command_t command,
-    const void *params, void **inout_ptr);
-
-//===----------------------------------------------------------------------===//
-// iree_async_token_t implementation details
-//===----------------------------------------------------------------------===//
-
-IREE_API_EXPORT void iree_async_token_destroy(iree_async_token_t *token);
-IREE_API_EXPORT uint32_t iree_async_token_offsetof_counter();
-
-//===----------------------------------------------------------------------===//
 // iree_async_value_t api
 //===----------------------------------------------------------------------===//
 
 IREE_API_EXPORT iree_status_t
-iree_async_value_create(iree_async_value_t **out_value);
+iree_async_value_create_i32(iree_async_value_t **out_value);
+
+IREE_API_EXPORT iree_status_t
+iree_async_value_create_token(iree_async_value_t **out_token);
+
+IREE_API_EXPORT iree_status_t iree_async_value_get_scalar_value(
+    iree_async_value_t *value, iree_vm_value_type_t type, char *buffer);
 
 IREE_API_EXPORT iree_status_t iree_async_value_query(iree_async_value_t *value);
 
@@ -79,11 +47,8 @@ IREE_API_EXPORT void iree_async_value_release(iree_async_value_t *value);
 IREE_API_EXPORT iree_status_t iree_async_value_and_then(
     iree_async_value_t *value, iree_loop_callback_t callback, iree_loop_t loop);
 
-IREE_API_EXPORT iree_status_t iree_async_value_get_available_value(
-    iree_async_value_t *value, iree_host_size_t buffer_capacity, char *buffer);
-
-// Returns a wait source reference to |async_token|
-// The async_token must be kept live for as long as the reference is live
+// Returns a wait source reference to |async_value|
+// The async_value must be kept live for as long as the reference is live
 IREE_API_EXPORT iree_wait_source_t
 iree_async_value_await(iree_async_value_t *value);
 

@@ -41,7 +41,7 @@ void AsyncToAsyncRuntimePass::runOnOperation() {
   TypeConverter typeConverter;
   typeConverter.addConversion([](Type type) { return type; });
   typeConverter.addConversion(
-      [](TokenType token) { return TokenType::get(token.getContext()); });
+      [](TokenType token) { return ValueType::get(token.getContext()); });
   typeConverter.addConversion(
       [](ValueType value) { return ValueType::get(value.getContext()); });
 

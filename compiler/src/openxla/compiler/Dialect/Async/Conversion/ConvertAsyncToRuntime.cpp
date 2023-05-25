@@ -75,11 +75,11 @@ func::FuncOp AsyncAPI::addDecl(PatternRewriter &rewriter, ModuleOp module,
 func::FuncOp AsyncAPI::getTokenAwait(PatternRewriter &rewriter,
                                      ModuleOp module) {
   MLIRContext *ctx = module->getContext();
-  SmallVector<Type> args{TokenType::get(ctx)};
+  SmallVector<Type> args{ValueType::get(ctx)};
   auto functionType = FunctionType::get(ctx, args, /*rets=*/{});
 
-  return addDecl(rewriter, module, StringAttr::get(ctx, "async.token.await"),
-                 functionType);
+  return addDecl(rewriter, module,
+                 StringAttr::get(ctx, "async.value.await.token"), functionType);
 }
 
 func::FuncOp AsyncAPI::getValueAwaitI32(PatternRewriter &rewriter,
